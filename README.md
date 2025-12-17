@@ -4,9 +4,9 @@ A small testbed for binary classification of procedurally generated chiral chain
 
 ## Repository layout
 - `configs/`: YAML configuration files with `data`, `model`, and `training` sections.
-- `src/gnn_testbed/data/`: Data generation utilities (`ChiralChainGenerator`, dataset, and collate function).
-- `src/gnn_testbed/models/`: Model definitions and builders (currently `SimplePointMLP`).
-- `src/gnn_testbed/training/`: Training loop, metrics, and early stopping.
+- `gnn_testbed/data/`: Data generation utilities (`ChiralChainGenerator`, dataset, and collate function).
+- `gnn_testbed/models/`: Model definitions and builders (currently `SimplePointMLP`).
+- `gnn_testbed/training/`: Training loop, metrics, and early stopping.
 - `train.py`: Entry point that wires components together from a config file.
 
 ## Running training

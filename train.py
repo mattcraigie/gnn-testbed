@@ -1,16 +1,11 @@
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
 from torch.utils.data import DataLoader
 
-# Ensure local src/ is on path when running without installation
 ROOT = Path(__file__).resolve().parent
-SRC_PATH = ROOT / "src"
-if str(SRC_PATH) not in sys.path:
-    sys.path.insert(0, str(SRC_PATH))
 
 from gnn_testbed.config import ExperimentConfig, load_experiment_config
 from gnn_testbed.data.chiral import ChiralChainDataset, ChiralChainGenerator, chiral_collate
