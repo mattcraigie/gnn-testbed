@@ -118,7 +118,11 @@ class Trainer:
         self.best_ckpt_path = os.path.join(self.cfg.work_dir, "best.pt")
         self.last_ckpt_path = os.path.join(self.cfg.work_dir, "last.pt")
 
-        self.writer = SummaryWriter(log_dir=self.cfg.work_dir, flush_secs=self.cfg.tb_flush_secs)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        self.tb_run_dir = os.path.join(self.cfg.work_dir, "tb", timestamp)
+        os.makedirs(self.tb_run_dir, exist_ok=True)
+
+        self.writer = SummaryWriter(log_dir=self.tb_run_dir, flush_secs=self.cfg.tb_flush_secs)
 
         self.history = {"train": [], "val": [], "test": None, "best_epoch": None}
 
