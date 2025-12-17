@@ -1,0 +1,63 @@
+data:
+  task: chiral
+  chain:
+    N: 256
+    rmin: 0.5
+    rmax: 1.5
+    box_factor: 10.0
+    seed: 0
+  normalize: box
+  short_range: [0.2, 0.6]
+  long_range: [1.0, 2.0]
+  train:
+    size: 100
+    seed: 123
+    batch_size: 128
+    shuffle: true
+    num_workers: 4
+    pin_memory: true
+    drop_last: true
+  val:
+    size: 100
+    seed: 456
+    batch_size: 256
+    shuffle: false
+    num_workers: 4
+    pin_memory: true
+    drop_last: false
+  test:
+    size: 100
+    seed: 789
+    batch_size: 256
+    shuffle: false
+    num_workers: 4
+    pin_memory: true
+    drop_last: false
+model:
+  type: standard_egnn
+  hidden_dim: 64
+  num_layers: 3
+  graph_mode: knn
+  k: 8
+training:
+  device: cuda
+  epochs: 10
+  lr: 0.001
+  weight_decay: 0.0001
+  grad_clip_norm: 1.0
+  amp: true
+  scheduler: cosine
+  warmup_epochs: 3
+  step_size: 50
+  gamma: 0.5
+  min_lr: 0.000001
+  early_stop_patience: 15
+  early_stop_min_delta: 0.0
+  monitor: val_loss
+  mode: min
+  work_dir: ./runs/egnn_chain
+  save_best_only: true
+  threshold: 0.5
+  tb_flush_secs: 10
+  tb_log_histograms: false
+  tb_log_grads: false
