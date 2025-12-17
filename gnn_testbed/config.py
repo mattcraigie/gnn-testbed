@@ -50,14 +50,14 @@ class DataConfig:
 
 @dataclass
 class ModelConfig:
-    type: str = "lss_gnn"
+    type: str = "lss_gnn"  # ["lss_gnn", "standard_egnn", "simple_point_mlp"]
     in_dim: int = 2
     hidden: int = 128
 
-    # LSS-GNN specific options
+    # GNN options
     hidden_dim: int = 64
     num_layers: int = 2
-    spin_symmetry: int = 2
+    spin_symmetry: int = 2  # Used by LSS-GNN only
     graph_mode: str = "knn"
     k: int = 5
 
