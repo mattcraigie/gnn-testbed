@@ -8,19 +8,26 @@ from torch.utils.data import DataLoader
 ROOT = Path(__file__).resolve().parent
 
 from gnn_testbed.config import ExperimentConfig, load_experiment_config
-from gnn_testbed.data.chiral import ChiralChainDataset, ChiralChainGenerator, chiral_collate
+from gnn_testbed.data.chiral import ChainDataset, ChainConfig, chain_collate
 from gnn_testbed.models import build_model
 from gnn_testbed.training.trainer import Trainer
 
 
-def build_dataloader(
-    generator: ChiralChainGenerator, split_cfg, normalize: str, *, collate_fn=chiral_collate
-) -> DataLoader:
-    dataset = ChiralChainDataset(
-        generator=generator,
+def build_dataloader(data_cfg, split_cfg, *, collate_fn=chain_collate) -> DataLoader:
+    dataset = ChainDataset(
+        task=data_cfg.task,
         size=split_cfg.size,
         seed=split_cfg.seed,
-        normalize=normalize,
+        cfg=ChainConfig(
+            N=data_cfg.chain.N,
+            rmin=data_cfg.chain.rmin,
+            rmax=data_cfg.chain.rmax,
+            box_factor=data_cfg.chain.box_factor,
+            seed=data_cfg.chain.seed,
+        ),
+        normalize=data_cfg.normalize,
+        short_range=tuple(data_cfg.short_range),
+        long_range=tuple(data_cfg.long_range),
     )
     return DataLoader(
         dataset,
@@ -34,17 +41,9 @@ def build_dataloader(
 
 
 def build_components(cfg: ExperimentConfig):
-    base_gen = ChiralChainGenerator(
-        N=cfg.data.generator.N,
-        rmin=cfg.data.generator.rmin,
-        rmax=cfg.data.generator.rmax,
-        box_factor=cfg.data.generator.box_factor,
-        seed=cfg.data.generator.seed,
-    )
-
-    train_loader = build_dataloader(base_gen, cfg.data.train, cfg.data.normalize)
-    val_loader = build_dataloader(base_gen, cfg.data.val, cfg.data.normalize)
-    test_loader = build_dataloader(base_gen, cfg.data.test, cfg.data.normalize)
+    train_loader = build_dataloader(cfg.data, cfg.data.train)
+    val_loader = build_dataloader(cfg.data, cfg.data.val)
+    test_loader = build_dataloader(cfg.data, cfg.data.test)
 
     model = build_model(cfg.model)
 
@@ -60,7 +59,7 @@ def build_components(cfg: ExperimentConfig):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Train chiral chain classifier")
+    parser = argparse.ArgumentParser(description="Train chain classifier")
     parser.add_argument(
         "--config",
         type=str,

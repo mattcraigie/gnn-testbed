@@ -1,11 +1,14 @@
 data:
-  generator:
+  task: chiral
+  chain:
     N: 256
     rmin: 0.5
     rmax: 1.5
     box_factor: 10.0
     seed: 0
   normalize: box
+  short_range: [0.2, 0.6]
+  long_range: [1.0, 2.0]
   train:
     size: 100
     seed: 123
@@ -30,14 +33,12 @@ data:
     num_workers: 4
     pin_memory: true
     drop_last: false
-
 model:
   type: standard_egnn
-  hidden_dim: 96
+  hidden_dim: 64
   num_layers: 3
   graph_mode: knn
   k: 8
-
 training:
   device: cuda
   epochs: 10
@@ -54,7 +55,7 @@ training:
   early_stop_min_delta: 0.0
   monitor: val_loss
   mode: min
-  work_dir: ./runs/chiral_chain_egnn
+  work_dir: ./runs/egnn_chain
   save_best_only: true
   threshold: 0.5
   tb_flush_secs: 10

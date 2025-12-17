@@ -2,18 +2,11 @@ from __future__ import annotations
 
 from dataclasses import MISSING, dataclass, field, fields, is_dataclass
 from pathlib import Path
-from typing import Any, Dict, get_type_hints
+from typing import Any, Dict, Tuple, get_type_hints
 
 import yaml
 
-
-@dataclass
-class GeneratorConfig:
-    N: int = 256
-    rmin: float = 0.5
-    rmax: float = 1.5
-    box_factor: float = 10.0
-    seed: int = 0
+from gnn_testbed.data.chiral import ChainConfig
 
 
 @dataclass
@@ -29,8 +22,11 @@ class DataSplitConfig:
 
 @dataclass
 class DataConfig:
-    generator: GeneratorConfig = field(default_factory=GeneratorConfig)
+    task: str = "chiral"  # ["chiral", "distance"]
+    chain: ChainConfig = field(default_factory=ChainConfig)
     normalize: str = "box"
+    short_range: Tuple[float, float] = (0.2, 0.6)
+    long_range: Tuple[float, float] = (1.0, 2.0)
     train: DataSplitConfig = field(
         default_factory=lambda: DataSplitConfig(
             size=100, seed=123, batch_size=128, shuffle=True, drop_last=True
@@ -141,7 +137,6 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
 
 
 __all__ = [
-    "GeneratorConfig",
     "DataSplitConfig",
     "DataConfig",
     "ModelConfig",
@@ -149,4 +144,5 @@ __all__ = [
     "ExperimentConfig",
     "load_experiment_config",
     "dataclass_from_dict",
+    "ChainConfig",
 ]
