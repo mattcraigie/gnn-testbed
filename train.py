@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent
 
 from gnn_testbed.config import ExperimentConfig, load_experiment_config
 from gnn_testbed.data.chiral import ChiralChainDataset, ChiralChainGenerator, chiral_collate
-from gnn_testbed.models.simple_mlp import build_model
+from gnn_testbed.models import build_model
 from gnn_testbed.training.trainer import Trainer
 
 
@@ -46,7 +46,7 @@ def build_components(cfg: ExperimentConfig):
     val_loader = build_dataloader(base_gen, cfg.data.val, cfg.data.normalize)
     test_loader = build_dataloader(base_gen, cfg.data.test, cfg.data.normalize)
 
-    model = build_model(cfg.model.type, in_dim=cfg.model.in_dim, hidden=cfg.model.hidden)
+    model = build_model(cfg.model)
 
     trainer = Trainer(
         model=model,

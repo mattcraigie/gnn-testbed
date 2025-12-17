@@ -50,9 +50,16 @@ class DataConfig:
 
 @dataclass
 class ModelConfig:
-    type: str = "simple_point_mlp"
+    type: str = "lss_gnn"
     in_dim: int = 2
     hidden: int = 128
+
+    # LSS-GNN specific options
+    hidden_dim: int = 64
+    num_layers: int = 2
+    spin_symmetry: int = 2
+    graph_mode: str = "knn"
+    k: int = 5
 
 
 @dataclass
