@@ -3,9 +3,10 @@ A small testbed for binary classification of procedurally generated chains. The 
 ## Repository layout
 - `configs/`: YAML configuration files with `data`, `model`, and `training` sections.
 - `gnn_testbed/data/`: Chain generators (`ChiralChainGenerator`, `DistancePreferenceChainGenerator`), dataset, and collate function.
-- `gnn_testbed/models/`: Model definitions and builders (default `ChiralLSSClassifier` with an LSS-GNN backbone, optional `ChiralEGNNClassifier`, and the older `SimplePointMLP`).
+- `gnn_testbed/models/`: Model definitions and builders (default `ChiralLSSClassifier` with an LSS-GNN backbone, optional `ChiralEGNNClassifier`, `ChiralTriangleLSSClassifier`, and the older `SimplePointMLP`).
 - `gnn_testbed/training/`: Training loop, metrics, and early stopping.
 - `train.py`: Entry point that wires components together from a config file.
+- `run_comparison.py`: Compare multiple GNN model variants from a single config file.
 
 ## Running training
 Use the provided default configuration:
@@ -23,9 +24,17 @@ The unified `ChainDataset` can emit two binary tasks:
 
 Normalization is controlled via `data.normalize` (`box` to divide by the periodic box size or `none`). The shared chain hyperparameters live under `data.chain`.
 
-> Note: The GNN models build graphs on the fly with SciPy (`scipy.spatial.Delaunay` / `cKDTree`). Install SciPy to use the default `lss_gnn` or the alternative `standard_egnn`. Switch `model.type` to `simple_point_mlp` in the config to avoid this dependency entirely.
+> Note: The GNN models build graphs on the fly with SciPy (`scipy.spatial.Delaunay` / `cKDTree`). Install SciPy to use `lss_gnn`, `standard_egnn`, or `triangle_lss`. Switch `model.type` to `simple_point_mlp` in the config to avoid this dependency entirely.
 
 ### Switching models
 - Default: `model.type: lss_gnn` (spin-aware local-frame message passing).
 - EGNN variant: `model.type: standard_egnn` (distance-based equivariant updates); see `configs/standard_egnn.yaml` for a starting point.
+- Triangle-local-frame variant: `model.type: triangle_lss` (triangle-centroid graph with spin-1 frames).
 - MLP baseline: `model.type: simple_point_mlp`.
+
+### Comparing models
+Run the comparison script to train and evaluate multiple GNN variants in one go:
+
+```bash
+python run_comparison.py --config configs/comparison.yaml
+```

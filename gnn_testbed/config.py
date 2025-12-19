@@ -46,7 +46,7 @@ class DataConfig:
 
 @dataclass
 class ModelConfig:
-    type: str = "lss_gnn"  # ["lss_gnn", "standard_egnn", "simple_point_mlp"]
+    type: str = "lss_gnn"  # ["lss_gnn", "standard_egnn", "triangle_lss", "simple_point_mlp"]
     in_dim: int = 2
     hidden: int = 128
 
@@ -56,6 +56,8 @@ class ModelConfig:
     spin_symmetry: int = 2  # Used by LSS-GNN only
     graph_mode: str = "knn"
     k: int = 5
+    tri_graph_mode: str = "adjacent"
+    k_tri: int = 6
 
 
 @dataclass
