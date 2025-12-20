@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import MISSING, dataclass, field, fields, is_dataclass
 from pathlib import Path
-from typing import Any, Dict, get_type_hints
+from typing import Any, Dict, Optional, get_type_hints
 
 import yaml
 
@@ -30,7 +30,7 @@ class DataConfig:
     pair_distance: float = 1.0
     normalize: str = "box"
     jitter_std: float = 0.01
-    jitter_clip: float | None = 0.05
+    jitter_clip: Optional[float] = 0.05
     train: DataSplitConfig = field(
         default_factory=lambda: DataSplitConfig(
             size=100, seed=123, batch_size=128, shuffle=True, drop_last=True
