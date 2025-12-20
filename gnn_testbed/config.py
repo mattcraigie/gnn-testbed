@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from dataclasses import MISSING, dataclass, field, fields, is_dataclass
 from pathlib import Path
-from typing import Any, Dict, Tuple, get_type_hints
+from typing import Any, Dict, get_type_hints
 
 import yaml
 
-from gnn_testbed.data.chiral import ChainConfig
+from gnn_testbed.data.pointcloud import PairFieldConfig, TriangleFieldConfig
 
 
 @dataclass
@@ -22,11 +22,15 @@ class DataSplitConfig:
 
 @dataclass
 class DataConfig:
-    task: str = "chiral"  # ["chiral", "distance"]
-    chain: ChainConfig = field(default_factory=ChainConfig)
+    task: str = "triangle"  # ["triangle", "pair"]
+    pair: PairFieldConfig = field(default_factory=PairFieldConfig)
+    triangle: TriangleFieldConfig = field(default_factory=TriangleFieldConfig)
+    signal_points: int = 96
+    noise_points: int = 32
+    pair_distance: float = 1.0
     normalize: str = "box"
-    short_range: Tuple[float, float] = (0.2, 0.6)
-    long_range: Tuple[float, float] = (1.0, 2.0)
+    jitter_std: float = 0.01
+    jitter_clip: float | None = 0.05
     train: DataSplitConfig = field(
         default_factory=lambda: DataSplitConfig(
             size=100, seed=123, batch_size=128, shuffle=True, drop_last=True
@@ -80,7 +84,7 @@ class TrainingConfig:
     monitor: str = "val_loss"  # ["val_loss", "val_acc", "val_f1"]
     mode: str = "min"  # ["min", "max"]
 
-    work_dir: str = "./runs/chiral"
+    work_dir: str = "./runs/pointcloud"
     save_best_only: bool = True
 
     threshold: float = 0.5
@@ -146,5 +150,6 @@ __all__ = [
     "ExperimentConfig",
     "load_experiment_config",
     "dataclass_from_dict",
-    "ChainConfig",
+    "PairFieldConfig",
+    "TriangleFieldConfig",
 ]

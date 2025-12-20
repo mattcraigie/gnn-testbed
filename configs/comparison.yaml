@@ -1,14 +1,17 @@
 data:
-  task: chiral
-  chain:
-    N: 256
-    rmin: 0.5
-    rmax: 1.5
-    box_factor: 10.0
+  task: triangle
+  pair:
+    box_size: 10.0
     seed: 0
+  triangle:
+    box_size: 10.0
+    seed: 0
+  signal_points: 96
+  noise_points: 32
+  pair_distance: 1.0
   normalize: box
-  short_range: [0.2, 0.6]
-  long_range: [1.0, 2.0]
+  jitter_std: 0.01
+  jitter_clip: 0.05
   train:
     size: 100
     seed: 123
